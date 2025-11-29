@@ -1,11 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize Gemini AI
-// NOTE: API Key is expected to be in process.env.API_KEY
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let ai: GoogleGenAI | null = null;
+
+const getAiClient = () => {
+  if (!ai) {
+    // Accessing process.env.API_KEY directly allows Vite to replace it with the string literal at build time.
+    ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  }
+  return ai;
+};
 
 export const getGameOverCommentary = async (score: number, highScore: number): Promise<string> => {
   try {
+    const client = getAiClient();
     const isNewHighScore = score > highScore;
     
     const prompt = `
@@ -20,11 +27,10 @@ export const getGameOverCommentary = async (score: number, highScore: number): P
       Otherwise, be encouraging but casual.
     `;
 
-    const response = await ai.models.generateContent({
+    const response = await client.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
-        maxOutputTokens: 50,
         temperature: 0.9,
       }
     });
