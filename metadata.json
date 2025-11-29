@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Gemini Snake",
+  "description": "A classic Snake game featuring AI-powered commentary on your gameplay performance using the Gemini API.",
+  "requestFramePermissions": []
+}
