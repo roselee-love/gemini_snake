@@ -1,5 +1,5 @@
 {
-  "name": "copy-of-gemini-snake",
+  "name": "gemini-whack-a-mole",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,8 +13,8 @@
     "react-dom": "^19.2.0",
     "@google/genai": "^1.30.0",
     "lucide-react": "^0.555.0",
-    "vite": "^7.2.4",
-    "@vitejs/plugin-react": "^5.1.1"
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.2.4"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Trophy, RefreshCw, Loader2, MessageSquareQuote } from 'lucide-react';
+import { Trophy, RefreshCw, Loader2, Sparkles } from 'lucide-react';
 import { getGameOverCommentary } from '../services/geminiService';
 
 interface GameOverModalProps {
@@ -30,39 +30,39 @@ const GameOverModal: React.FC<GameOverModalProps> = ({ score, highScore, onReset
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center transform transition-all scale-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-pink-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+      <div className="bg-white border-4 border-pink-300 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center transform transition-all scale-100">
         
-        <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/10 text-red-500 mb-4">
-            <Trophy size={32} />
+        <div className="mb-6 relative">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-yellow-100 text-yellow-500 mb-2 shadow-inner">
+            <Trophy size={40} className="drop-shadow-sm" />
           </div>
-          <h2 className="text-3xl font-black text-white mb-1">GAME OVER</h2>
-          <p className="text-gray-400">Snake collided!</p>
+          <h2 className="text-3xl font-black text-pink-500 mb-1 drop-shadow-sm">TIME'S UP!</h2>
+          <p className="text-gray-400 font-medium">Moles are sleeping...</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
-            <p className="text-gray-500 text-xs uppercase tracking-wider font-semibold">Score</p>
-            <p className="text-3xl font-bold text-white">{score}</p>
+          <div className="bg-pink-50 p-4 rounded-2xl border-2 border-pink-100">
+            <p className="text-pink-400 text-xs uppercase tracking-wider font-bold">Score</p>
+            <p className="text-4xl font-black text-pink-600">{score}</p>
           </div>
-          <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
-            <p className="text-gray-500 text-xs uppercase tracking-wider font-semibold">Best</p>
-            <p className="text-3xl font-bold text-yellow-400">{highScore}</p>
+          <div className="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-100">
+            <p className="text-yellow-400 text-xs uppercase tracking-wider font-bold">Best</p>
+            <p className="text-4xl font-black text-yellow-500">{highScore}</p>
           </div>
         </div>
 
         {/* AI Commentary Section */}
         <div className="mb-8 min-h-[80px] flex items-center justify-center">
             {loading ? (
-                <div className="flex items-center gap-2 text-indigo-400">
-                    <Loader2 size={20} className="animate-spin" />
-                    <span className="text-sm font-medium">Asking AI for feedback...</span>
+                <div className="flex items-center gap-2 text-pink-400">
+                    <Loader2 size={24} className="animate-spin" />
+                    <span className="text-sm font-bold">Magic Mirror is thinking...</span>
                 </div>
             ) : (
-                <div className="relative bg-indigo-900/20 border border-indigo-500/30 p-4 rounded-xl w-full">
-                     <MessageSquareQuote className="absolute -top-3 -left-2 text-indigo-400 bg-gray-800 rounded-full p-1" size={24} />
-                     <p className="text-indigo-200 text-sm italic font-medium leading-relaxed">
+                <div className="relative bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100 p-4 rounded-2xl w-full">
+                     <Sparkles className="absolute -top-3 -left-2 text-yellow-400 fill-yellow-400" size={24} />
+                     <p className="text-purple-800 text-sm font-medium italic leading-relaxed">
                         "{commentary}"
                      </p>
                 </div>
@@ -71,9 +71,9 @@ const GameOverModal: React.FC<GameOverModalProps> = ({ score, highScore, onReset
 
         <button
           onClick={onReset}
-          className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]"
+          className="w-full py-4 bg-green-500 hover:bg-green-400 active:bg-green-600 text-white font-black text-lg rounded-2xl transition-all flex items-center justify-center gap-2 shadow-[0_6px_0_rgb(21,128,61)] active:shadow-none active:translate-y-[6px]"
         >
-          <RefreshCw size={20} />
+          <RefreshCw size={24} />
           Play Again
         </button>
       </div>

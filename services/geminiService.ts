@@ -16,15 +16,15 @@ export const getGameOverCommentary = async (score: number, highScore: number): P
     const isNewHighScore = score > highScore;
     
     const prompt = `
-      I just finished playing a game of Snake.
+      I just finished playing a game of Whack-a-Mole (fairytale themed).
       My Score: ${score}.
       My previous High Score: ${highScore}.
       ${isNewHighScore ? "I beat my high score!" : "I did not beat my high score."}
 
-      Please give me a very short, witty, 1-sentence commentary on my performance. 
-      If the score is low (under 5), be sarcastically funny. 
-      If the score is high (over 20), be impressed.
-      Otherwise, be encouraging but casual.
+      Please give me a very short, witty, 1-sentence commentary on my reflexes and performance.
+      Adopt a cute, playful, or slightly mischievous persona.
+      If the score is low (under 10), be gently teasing about my slow reaction time.
+      If the score is high (over 30), be amazed at my speed.
     `;
 
     const response = await client.models.generateContent({
@@ -35,9 +35,9 @@ export const getGameOverCommentary = async (score: number, highScore: number): P
       }
     });
 
-    return response.text || "Game Over! Better luck next time.";
+    return response.text || "Time's up! The moles are safe... for now.";
   } catch (error) {
     console.error("Error fetching Gemini commentary:", error);
-    return "Game Over! (AI currently sleeping)";
+    return "Time's up! (AI is currently napping in a burrow)";
   }
 };

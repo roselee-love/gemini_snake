@@ -1,10 +1,3 @@
-export type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
-
-export interface Coordinate {
-  x: number;
-  y: number;
-}
-
 export enum GameStatus {
   IDLE = 'IDLE',
   PLAYING = 'PLAYING',
@@ -13,11 +6,9 @@ export enum GameStatus {
 }
 
 export interface GameState {
-  snake: Coordinate[];
-  food: Coordinate;
-  direction: Direction;
+  activeMoles: boolean[];
   score: number;
   highScore: number;
   status: GameStatus;
-  speed: number;
+  timeLeft: number;
 }

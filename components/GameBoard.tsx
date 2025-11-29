@@ -1,78 +1,87 @@
 import React from 'react';
-import { Coordinate, GameStatus } from '../types';
+import { GameStatus } from '../types';
 import { GRID_SIZE } from '../constants';
 
 interface GameBoardProps {
-  snake: Coordinate[];
-  food: Coordinate;
+  activeMoles: boolean[];
+  onWhack: (index: number) => void;
   status: GameStatus;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ snake, food, status }) => {
-  // Create a 1D array representing the grid for rendering
-  const gridCells = Array.from({ length: GRID_SIZE * GRID_SIZE });
-
-  // Helper to check if a cell is part of the snake
-  const getSnakeSegmentIndex = (x: number, y: number) => {
-    return snake.findIndex(segment => segment.x === x && segment.y === y);
-  };
-
-  const isFood = (x: number, y: number) => food.x === x && food.y === y;
-
+const GameBoard: React.FC<GameBoardProps> = ({ activeMoles, onWhack, status }) => {
   return (
     <div 
-      className="relative bg-gray-900 border-4 border-gray-700 rounded-lg shadow-2xl overflow-hidden"
+      className="relative bg-green-400 border-8 border-green-600 rounded-3xl shadow-[0_10px_0_rgb(22,163,74)] overflow-hidden p-4"
       style={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(${GRID_SIZE}, minmax(0, 1fr))`,
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '16px',
         aspectRatio: '1/1',
         width: '100%',
-        maxWidth: '500px'
+        maxWidth: '400px'
       }}
     >
-      {gridCells.map((_, index) => {
-        const x = index % GRID_SIZE;
-        const y = Math.floor(index / GRID_SIZE);
-        
-        const snakeIndex = getSnakeSegmentIndex(x, y);
-        const isSnakeHead = snakeIndex === 0;
-        const isSnakeBody = snakeIndex > 0;
-        const isFoodCell = isFood(x, y);
+      {/* Grass Texture Overlay */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none" 
+           style={{ backgroundImage: 'radial-gradient(#14532d 2px, transparent 2px)', backgroundSize: '20px 20px' }}>
+      </div>
+
+      {Array.from({ length: GRID_SIZE }).map((_, index) => {
+        const isMoleVisible = activeMoles[index];
 
         return (
           <div 
-            key={`${x}-${y}`}
-            className={`
-              w-full h-full border-[0.5px] border-gray-800/30
-              transition-all duration-100
-              ${isSnakeHead ? 'bg-emerald-400 z-10 rounded-sm' : ''}
-              ${isSnakeBody ? 'bg-emerald-600/80 rounded-sm' : ''}
-              ${isFoodCell ? 'bg-red-500 rounded-full scale-75 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.6)]' : ''}
-            `}
+            key={index}
+            className="relative w-full h-full flex items-end justify-center"
           >
-            {isSnakeHead && (
-               <div className="w-full h-full flex items-center justify-center">
-                 <div className="w-1.5 h-1.5 bg-black rounded-full opacity-50"></div>
-                 <div className="w-0.5"></div>
-                 <div className="w-1.5 h-1.5 bg-black rounded-full opacity-50"></div>
-               </div>
-            )}
+            {/* The Hole */}
+            <div className="absolute bottom-2 w-[80%] h-[30%] bg-stone-800 rounded-full opacity-60 shadow-inner"></div>
+            
+            {/* The Mole */}
+            <div 
+              className={`
+                absolute bottom-4 w-[70%] h-[70%] 
+                bg-yellow-300 rounded-t-full rounded-b-2xl border-4 border-yellow-500
+                transition-all duration-150 ease-out cursor-pointer select-none
+                ${isMoleVisible ? 'translate-y-0 scale-100' : 'translate-y-[120%] scale-90'}
+              `}
+              onClick={() => isMoleVisible && status === GameStatus.PLAYING && onWhack(index)}
+              style={{ willChange: 'transform' }}
+            >
+                {/* Face */}
+                <div className="absolute top-[30%] left-[20%] w-3 h-3 bg-stone-800 rounded-full animate-blink"></div>
+                <div className="absolute top-[30%] right-[20%] w-3 h-3 bg-stone-800 rounded-full animate-blink"></div>
+                
+                {/* Nose */}
+                <div className="absolute top-[45%] left-1/2 -translate-x-1/2 w-5 h-4 bg-pink-400 rounded-full"></div>
+                
+                {/* Whiskers */}
+                <div className="absolute top-[50%] left-0 w-3 h-[2px] bg-stone-700 -rotate-12"></div>
+                <div className="absolute top-[55%] left-0 w-3 h-[2px] bg-stone-700 rotate-12"></div>
+                <div className="absolute top-[50%] right-0 w-3 h-[2px] bg-stone-700 rotate-12"></div>
+                <div className="absolute top-[55%] right-0 w-3 h-[2px] bg-stone-700 -rotate-12"></div>
+
+                {/* Highlight */}
+                <div className="absolute top-2 left-4 w-3 h-2 bg-white opacity-40 rounded-full -rotate-45"></div>
+            </div>
+
+            {/* Front Dirt/Grass to hide bottom of mole */}
+            <div className="absolute bottom-0 w-full h-4 bg-green-500 rounded-b-xl z-10 border-t-4 border-green-600"></div>
           </div>
         );
       })}
 
       {/* Overlays */}
       {status === GameStatus.IDLE && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm z-20 text-center p-4">
-          <p className="text-white text-lg font-bold mb-2">Ready?</p>
-          <p className="text-gray-300 text-sm">Press Space or Start Button</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm z-20 text-center p-4 rounded-xl">
+          <p className="text-white text-2xl font-black drop-shadow-lg mb-2 stroke-black">Ready to Whack?</p>
+          <p className="text-white font-bold text-sm bg-pink-500 px-3 py-1 rounded-full shadow-lg">Press Start</p>
         </div>
       )}
       
       {status === GameStatus.PAUSED && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20">
-          <p className="text-white text-2xl font-black tracking-widest uppercase">Paused</p>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20 rounded-xl">
+          <p className="text-white text-3xl font-black tracking-widest uppercase drop-shadow-md">Paused</p>
         </div>
       )}
     </div>
